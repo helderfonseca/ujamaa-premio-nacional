@@ -1,0 +1,23 @@
+{
+  "development": {
+    "dialect": "postgres",
+    "host": "localhost",
+    "username": "postgres",
+    "password": "test",
+    "database": "premio_nacional"
+  },
+  "test": {
+    "dialect": "postgres",
+    "host": "localhost",
+    "username": "postgres",
+    "password": "test",
+    "database": "premio_nacional"
+  },
+  "production": {
+    "dialect": "postgres",
+    "host": "localhost",
+    "username": "ujamaa",
+    "password": "!ujamaa2023!",
+    "database": "premio_nacional"
+  }
+}
