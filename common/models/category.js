@@ -1,19 +1,20 @@
-const { query } = require("express");
 const { DataTypes } = require("sequelize");
 
-const CategoryModel = {
+CategoryModel = {
   id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-
   name: { type: DataTypes.STRING, allowNull: false },
-
   description: { type: DataTypes.STRING, allowNull: true },
-  
   status: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true }
 }
 
 module.exports = {
   initialize: (sequelize) => {
-    this.model = sequelize.define('category', CategoryModel);
+    const Category = sequelize.define('category', CategoryModel);
+    Category.associate = function (models) {
+      const { Candidate } = models;
+      Category.hasOne(Candidate);
+    };
+    this.model = Category;
   },
 
   createCategory: (category) => {
