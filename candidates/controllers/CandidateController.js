@@ -1,7 +1,8 @@
 const CandidateModel = require('../../common/models/candidate');
+const CandidateService = require('../../services/candidate');
 
 module.exports = {
-  getAllCandidates: (req, res) => {
+  /*getAllCandidates: (req, res) => {
     const { query: filters } = req;
 
     CandidateModel.findAllCandidates(filters)
@@ -17,9 +18,9 @@ module.exports = {
           error: err,
         })
       })
-  },
+  },*/
 
-  getCandidateById: (req, res) => {
+  /*getCandidateById: (req, res) => {
     const {
       params: { candidateId },
     } = req;
@@ -38,12 +39,12 @@ module.exports = {
           error: err,
         })
       })
-  },
+  },*/
 
   createCandidate: (req, res) => {
     const { body } = req;
 
-    CandidateModel.createCandidate(body)
+    CandidateService.create(body)
       .then((candidate) => {
         return res.status(200).json({
           status: true,
@@ -58,7 +59,7 @@ module.exports = {
       })
   },
 
-  updateCandidate: (req, res) => {
+  /*updateCandidate: (req, res) => {
     const {
       params: { candidateId },
       body: payload,
@@ -113,5 +114,5 @@ module.exports = {
           error: err,
         })
       })
-  },
+  },*/
 }

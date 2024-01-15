@@ -1,25 +1,38 @@
-const { ClientBase } = require("pg");
-const { DataTypes } = require("sequelize");
+const { Model } = require("sequelize");
 
-const CandidateModel = {
-  id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-  name: { type: DataTypes.STRING, allowNull: false },
-  residence: { type: DataTypes.STRING, allowNull: false },
-  phoneNumber: { type: DataTypes.STRING, allowNull: false },
-  projectName: { type: DataTypes.STRING, allowNull: false },
-  projectDescription: { type: DataTypes.STRING, allowNull: false },
-  projectOpeningDate: { type: DataTypes.DATE, allowNull: false },
-  status: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true }
-}
+module.exports = (sequelize, DataTypes) => {
+  class Candidate extends Model {
+      static associate(models) {
+        // define association here
+      }
+  }
 
-module.exports = {
+  Candidate.init({
+    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+    name: { type: DataTypes.STRING, allowNull: false },
+    residence: { type: DataTypes.STRING, allowNull: false },
+    phoneNumber: { type: DataTypes.STRING, allowNull: false },
+    projectName: { type: DataTypes.STRING, allowNull: false },
+    projectDescription: { type: DataTypes.STRING, allowNull: false },
+    projectOpeningDate: { type: DataTypes.DATE, allowNull: false },
+    status: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true }
+  }, {
+    sequelize,
+    modelName: 'Candidate'
+  });
+
+  return Candidate;
+};
+
+
+/*module.exports = {
   initialize: (sequelize) => {
     const Candidate = sequelize.define('candidate', CandidateModel);
     //Candidate.belongsTo(sequelize.models.Category, { foreignKey: 'category_id' });
     
     Candidate.associate = function (models) {
       const { Category } = models;
-      Candidate.belongsTo(Category, { foreignKey: 'category_id' });
+      Candidate.belongsTo(Category, { foreignKey: 'id', as: 'category' });
     };
     //console.log(Candidate);
     this.model = Candidate;
@@ -53,3 +66,4 @@ module.exports = {
     })
   }
 }
+*/

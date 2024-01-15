@@ -22,8 +22,8 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 const sequelizeConfig = require('./config/config.json')[process.env.NODE_ENV];
 const sequelize = new Sequelize(sequelizeConfig);
 
-Candidate.initialize(sequelize);
-Category.initialize(sequelize);
+//Candidate.initialize(sequelize);
+//Category.initialize(sequelize);
 
 sequelize
   .sync({ force: true })
