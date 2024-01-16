@@ -1,7 +1,7 @@
 const Candidate = require('../common/models/candidate');
 
 const CandidateService = {
-  create: async(
+  createCandidate: async(
     name,
     residence,
     phoneNumber,

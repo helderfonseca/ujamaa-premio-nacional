@@ -1,10 +1,10 @@
-const CategoryModel = require('../../common/models/category');
+const { category } = require('../../common/models');
 
 module.exports = {
   getAllCategories: (req, res) => {
     const { query: filters } = req;
 
-    CategoryModel.findAllCategories(filters)
+    category.findAll(filters)
     .then((categories) => {
       return res.status(200).json({
         status: true,
@@ -22,7 +22,7 @@ module.exports = {
   getCategoryById: () => {
     const { params: categoryId } = req;
 
-    CategoryModel.findCategory({ id: categoryId }) 
+    category.findOne({ id: categoryId }) 
     .then((category) => {
       return res.status(200).json({
         status: true,
@@ -40,7 +40,7 @@ module.exports = {
   createCategory: (req, res) => {
     const { body } = req;
 
-    CategoryModel.createCategory(body)
+    category.create(body)
     .then((category) => {
       return res.status(200).json({
         status: true,
@@ -72,7 +72,7 @@ module.exports = {
       })
     }
 
-    CategoryModel.updateCategory({ id: categoryId }, payload)
+    category.update({ id: categoryId }, payload)
       .then(() => {
         return CandidateModel.findCategory({ id: candidateId });
       })
@@ -95,7 +95,7 @@ module.exports = {
       params: { categoryId },
     } = req;
 
-    CategoryModel.deleteCategory({ id: categoryId })
+    category.destroy({ id: categoryId })
       .then((numberOfEntriesDeleted) => {
         return res.status(200).json({
           status: true,

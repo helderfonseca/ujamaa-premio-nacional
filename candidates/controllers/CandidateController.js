@@ -1,11 +1,10 @@
-const CandidateModel = require('../../common/models/candidate');
-const CandidateService = require('../../services/candidate');
+const { candidate } = require('../../common/models');
 
 module.exports = {
-  /*getAllCandidates: (req, res) => {
+  getAllCandidates: (req, res) => {
     const { query: filters } = req;
 
-    CandidateModel.findAllCandidates(filters)
+    candidate.findAll(filters)
       .then((candidates) => {
         return res.status(200).json({
           status: true,
@@ -18,33 +17,14 @@ module.exports = {
           error: err,
         })
       })
-  },*/
+  },
 
-  /*getCandidateById: (req, res) => {
+  getCandidateById: (req, res) => {
     const {
-      params: { candidateId },
+      params: { id },
     } = req;
 
-
-    CandidateModel.findCandidate({ id: candidateId })
-      .then((candidate) => {
-        return res.status(200).json({
-          status: true,
-          data: candidate.toJSON(),
-        })
-      })
-      .catch((err) => {
-        return res.status(500).json({
-          status: false,
-          error: err,
-        })
-      })
-  },*/
-
-  createCandidate: (req, res) => {
-    const { body } = req;
-
-    CandidateService.create(body)
+    candidate.findOne({ id: id })
       .then((candidate) => {
         return res.status(200).json({
           status: true,
@@ -59,7 +39,25 @@ module.exports = {
       })
   },
 
-  /*updateCandidate: (req, res) => {
+  createCandidate: (req, res) => {
+    const { body } = req;
+
+    candidate.create(body)
+      .then((candidate) => {
+        return res.status(201).json({
+          status: true,
+          data: candidate.toJSON(),
+        })
+      })
+      .catch((err) => {
+        return res.status(500).json({
+          status: false,
+          error: err,
+        })
+      })
+  },
+
+  updateCandidate: (req, res) => {
     const {
       params: { candidateId },
       body: payload,
@@ -76,7 +74,7 @@ module.exports = {
       })
     }
 
-    CandidateModel.updateCandidate({ id: candidateId }, payload)
+    candidate.update({ id: candidateId }, payload)
       .then(() => {
         return CandidateModel.findCandidate({ id: candidateId });
       })
@@ -99,7 +97,7 @@ module.exports = {
       params: { candidateId },
     } = req;
 
-    CandidateModel.deleteCandidate({ id: candidateId })
+    candidate.destroy({ id: candidateId })
       .then((numberOfEntriesDeleted) => {
         return res.status(200).json({
           status: true,
@@ -114,5 +112,5 @@ module.exports = {
           error: err,
         })
       })
-  },*/
+  },
 }

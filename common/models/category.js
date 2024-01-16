@@ -1,47 +1,20 @@
-const { DataTypes } = require("sequelize");
 
-CategoryModel = {
-  id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-  name: { type: DataTypes.STRING, allowNull: false },
-  description: { type: DataTypes.STRING, allowNull: true },
-  status: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true }
-}
+const category = (sequelize, DataTypes) => {
 
-module.exports = {
-  initialize: (sequelize) => {
-    const Category = sequelize.define('category', CategoryModel);
-    Category.associate = function (models) {
-      const { Candidate } = models;
-      Category.hasOne(Candidate);
-    };
-    this.model = Category;
-  },
+  const Category = sequelize.define('Category', {
 
-  createCategory: (category) => {
-    return this.model.create(category);
-  },
+    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+    name: { type: DataTypes.STRING, allowNull: false },
+    description: { type: DataTypes.STRING, allowNull: true },
+    status: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true }
 
-  findCategory: (query) => {
-    return this.model.findOne({
-      where: query
-    })
-  },
+  }, {
+    sequelize,
+    modelName: 'category',
+    tableName: 'categories'
+  });
 
-  updateCategory: (query, updatedValue) => {
-    return this.model.update(updatedValue, {
-      where: query
-    })
-  },
+  return Category;
+};
 
-  findAllCategories: (query) => {
-    return this.model.findAll({
-      where: query
-    })
-  },
-
-  deleteCategory: (query) => {
-    return this.model.destroy({
-      where: query
-    });
-  }
-}
+module.exports = category;
