@@ -1,10 +1,10 @@
-const { candidate } = require('../../common/models');
+const { Candidate } = require('../models');
 
 module.exports = {
   getAllCandidates: (req, res) => {
     const { query: filters } = req;
 
-    candidate.findAll(filters)
+    Candidate.findAll(filters)
       .then((candidates) => {
         return res.status(200).json({
           status: true,
@@ -24,7 +24,7 @@ module.exports = {
       params: { id },
     } = req;
 
-    candidate.findOne({ id: id })
+    Candidate.findOne({ id: id })
       .then((candidate) => {
         return res.status(200).json({
           status: true,
@@ -42,7 +42,7 @@ module.exports = {
   createCandidate: (req, res) => {
     const { body } = req;
 
-    candidate.create(body)
+    Candidate.create(body)
       .then((candidate) => {
         return res.status(201).json({
           status: true,
@@ -69,14 +69,14 @@ module.exports = {
       return res.status(400).json({
         status: false,
         error: {
-          message: "Body is empty, hence can not update the candidate"
+          message: "Body is empty, hence can not update the Candidate"
         }
       })
     }
 
-    candidate.update({ id: candidateId }, payload)
+    Candidate.update({ id: candidateId }, payload)
       .then(() => {
-        return CandidateModel.findCandidate({ id: candidateId });
+        return Candidate.findCandidate({ id: candidateId });
       })
       .then((candidate) => {
         return res.status(200).json({
@@ -97,7 +97,7 @@ module.exports = {
       params: { candidateId },
     } = req;
 
-    candidate.destroy({ id: candidateId })
+    Candidate.destroy({ id: candidateId })
       .then((numberOfEntriesDeleted) => {
         return res.status(200).json({
           status: true,

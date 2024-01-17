@@ -1,50 +1,33 @@
-const { category } = require('../../common/models');
+const { Category } = require('../models');
 
 module.exports = {
   getAllCategories: (req, res) => {
     const { query: filters } = req;
 
-    category.findAll(filters)
-    .then((categories) => {
-      return res.status(200).json({
-        status: true,
-        data: categories
+    Category.findAll(filters)
+      .then((categories) => {
+        return res.status(200).json({
+          status: true,
+          data: categories
+        })
       })
-    })
-    .catch((err) => {
-      return res.status(500).json({
-        status: false,
-        error: err
+      .catch((err) => {
+        return res.status(500).json({
+          status: false,
+          error: err
+        })
       })
-    })
   },
 
   getCategoryById: () => {
     const { params: categoryId } = req;
 
-    category.findOne({ id: categoryId }) 
-    .then((category) => {
-      return res.status(200).json({
-        status: true,
-        data: category.toJSON()
-      })
-    })
-    .then((err) => {
-      return res.status(500).json({
-        status: false,
-        error: err
-      })
-    })
-  },
-
-  createCategory: (req, res) => {
-    const { body } = req;
-
-    category.create(body)
-    .then((category) => {
-      return res.status(200).json({
-        status: true,
-        data: category.toJSON()
+    Category.findOne({ id: categoryId }) 
+      .then((category) => {
+        return res.status(200).json({
+          status: true,
+          data: category.toJSON()
+        })
       })
       .then((err) => {
         return res.status(500).json({
@@ -52,10 +35,27 @@ module.exports = {
           error: err
         })
       })
-    })
   },
 
-  updateCandidate: (req, res) => {
+  createCategory: (req, res) => {
+    const { body } = req;
+
+    Category.create(body)
+      .then((category) => {
+        return res.status(200).json({
+          status: true,
+          data: category.toJSON()
+        })
+        .then((err) => {
+          return res.status(500).json({
+            status: false,
+            error: err
+          })
+        })
+      })
+  },
+
+  updateCategory: (req, res) => {
     const {
       params: { categoryId },
       body: payload,
@@ -67,14 +67,14 @@ module.exports = {
       return res.status(400).json({
         status: false,
         error: {
-          message: "Body is empty, hence can not update the candidate"
+          message: "Body is empty, hence can not update the Category"
         }
       })
     }
 
-    category.update({ id: categoryId }, payload)
+    Category.update({ id: categoryId }, payload)
       .then(() => {
-        return CandidateModel.findCategory({ id: candidateId });
+        return Category.findCategory({ id: categoryId });
       })
       .then((category) => {
         return res.status(200).json({
@@ -95,7 +95,7 @@ module.exports = {
       params: { categoryId },
     } = req;
 
-    category.destroy({ id: categoryId })
+    Category.destroy({ id: categoryId })
       .then((numberOfEntriesDeleted) => {
         return res.status(200).json({
           status: true,

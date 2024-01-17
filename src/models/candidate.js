@@ -6,9 +6,9 @@ const candidate = (sequelize, DataTypes) => {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     name: { type: DataTypes.STRING, allowNull: false },
     residence: { type: DataTypes.STRING, allowNull: false },
-    phoneNumber: { type: DataTypes.STRING, allowNull: false, field: 'phone_number' },
-    projectName: { type: DataTypes.STRING, allowNull: false, field: 'project_name' },
-    projectDescription: { type: DataTypes.STRING, allowNull: false, field: 'project_description' },
+    phoneNumber: { type: DataTypes.STRING, allowNull: false, unique: true, field: 'phone_number' },
+    projectName: { type: DataTypes.STRING, allowNull: false, unique: true, field: 'project_name' },
+    projectDescription: { type: DataTypes.TEXT, allowNull: false, field: 'project_description' },
     projectOpeningDate: { type: DataTypes.DATE, allowNull: false, field: 'project_opening_date' },
     status: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true }
 
@@ -17,6 +17,12 @@ const candidate = (sequelize, DataTypes) => {
     modelName: 'candidate',
     tableName: 'candidates'
   });
+
+  Candidate.associate = (models) => {
+    Candidate.belongsTo(models.Category, {
+      foreignKey: 'category_id'
+    })
+  }
 
   return Candidate;
 };

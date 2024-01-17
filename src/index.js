@@ -1,12 +1,10 @@
 const express = require('express');
-const CandidateRoutes = require("./candidates/routes");
-const CategoryRoutes = require('./candidates/routes');
-const Candidate = require('./common/models/candidate');
-const Category = require('./common/models/category');
+const CandidateRoutes = require("./routes");
+const CategoryRoutes = require('./routes');
 const cors = require("cors");
 const morgan = require("morgan");
 const app = express();
-const { sequelize } = require('./common/models');
+const { sequelize } = require('./models');
 
 app.use(morgan("tiny"));
 app.use(cors());
@@ -15,13 +13,8 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
-//Candidate.initialize(sequelize);
-//Category.initialize(sequelize);
-
-//console.log(CandidateObject);
-
 sequelize
-  .sync({ force: true })
+  .sync()
   .then(() => {
     console.log('Sequelize initialized!!');
 
