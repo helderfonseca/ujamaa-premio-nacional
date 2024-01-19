@@ -1,28 +1,26 @@
-const { Category } = require('../models');
+const { category, candidate } = require('../models');
 
 module.exports = {
-  getAllCategories: (req, res) => {
-    const { query: filters } = req;
+  getAllCategories: async (req, res) => {
 
-    Category.findAll(filters)
-      .then((categories) => {
-        return res.status(200).json({
-          status: true,
-          data: categories
-        })
+    try {
+      const categories = await category.findAll({ include: candidate });
+      return res.status(200).json({
+        status: true,
+        data: categories
+      });
+    } catch(err){
+      return res.status(500).json({
+        status: false,
+        error: err.message
       })
-      .catch((err) => {
-        return res.status(500).json({
-          status: false,
-          error: err
-        })
-      })
+    }
   },
 
   getCategoryById: () => {
     const { params: categoryId } = req;
 
-    Category.findOne({ id: categoryId }) 
+    category.findOne({ id: categoryId }) 
       .then((category) => {
         return res.status(200).json({
           status: true,
@@ -32,27 +30,25 @@ module.exports = {
       .then((err) => {
         return res.status(500).json({
           status: false,
-          error: err
+          error: err.message
         })
       })
   },
 
-  createCategory: (req, res) => {
+  createCategory: async (req, res) => {
     const { body } = req;
 
-    Category.create(body)
-      .then((category) => {
-        return res.status(200).json({
-          status: true,
-          data: category.toJSON()
-        })
-        .then((err) => {
-          return res.status(500).json({
-            status: false,
-            error: err
-          })
-        })
-      })
+    try {
+      const newCategory = await category.create(body);
+      return res.status(201).json({
+        status: true,
+        data: newCategory.toJSON()
+      });
+    } catch(err){
+      return res.status(500).json({
+          status: false,
+          error: err.message
+      })}
   },
 
   updateCategory: (req, res) => {
@@ -72,9 +68,9 @@ module.exports = {
       })
     }
 
-    Category.update({ id: categoryId }, payload)
+    category.update({ id: categoryId }, payload)
       .then(() => {
-        return Category.findCategory({ id: categoryId });
+        return category.findCategory({ id: categoryId });
       })
       .then((category) => {
         return res.status(200).json({
@@ -85,7 +81,7 @@ module.exports = {
       .catch((err) => {
         return res.status(500).json({
           status: false,
-          error: err,
+          error: err.message
         })
       })
   },
@@ -95,7 +91,7 @@ module.exports = {
       params: { categoryId },
     } = req;
 
-    Category.destroy({ id: categoryId })
+    category.destroy({ id: categoryId })
       .then((numberOfEntriesDeleted) => {
         return res.status(200).json({
           status: true,
@@ -107,7 +103,7 @@ module.exports = {
       .catch((err) => {
         return res.status(500).json({
           status: false,
-          error: err,
+          error: err.message
         })
       })
   },

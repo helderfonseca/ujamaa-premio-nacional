@@ -1,6 +1,6 @@
 const express = require('express');
-const CandidateRoutes = require("./routes");
-const CategoryRoutes = require('./routes');
+const CandidateRoutes = require('./routes/CandidateRoutes');
+const CategoryRoutes = require('./routes/CategoryRoutes');
 const cors = require("cors");
 const morgan = require("morgan");
 const app = express();
@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 sequelize
-  .sync()
+  .sync({ alter: true })
   .then(() => {
     console.log('Sequelize initialized!!');
 

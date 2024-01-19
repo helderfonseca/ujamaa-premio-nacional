@@ -1,22 +1,20 @@
-const { Candidate } = require('../models');
+const { candidate, category } = require('../models');
 
 module.exports = {
-  getAllCandidates: (req, res) => {
-    const { query: filters } = req;
-
-    Candidate.findAll(filters)
-      .then((candidates) => {
-        return res.status(200).json({
-          status: true,
-          data: candidates,
-        })
+  getAllCandidates: async (req, res) => {
+    
+    try {
+      const candidates = await candidate.findAll({ include: category });
+      return res.status(200).json({
+        status: true,
+        data: candidates
+      });
+    } catch(err){
+      return res.status(500).json({
+        status: false,
+        error: err.message
       })
-      .catch((err) => {
-        return res.status(500).json({
-          status: false,
-          error: err,
-        })
-      })
+    }
   },
 
   getCandidateById: (req, res) => {
@@ -24,7 +22,7 @@ module.exports = {
       params: { id },
     } = req;
 
-    Candidate.findOne({ id: id })
+    candidate.findOne({ id: id })
       .then((candidate) => {
         return res.status(200).json({
           status: true,
@@ -34,27 +32,35 @@ module.exports = {
       .catch((err) => {
         return res.status(500).json({
           status: false,
-          error: err,
+          error: err.message,
         })
       })
   },
 
-  createCandidate: (req, res) => {
+  createCandidate: async (req, res) => {
     const { body } = req;
 
-    Candidate.create(body)
-      .then((candidate) => {
+      console.log(req.body);
+      try {
+        const newCandidate = await candidate.create({ 
+          name: body.name,
+          residence: body.residence,
+          phoneNumber: body.phoneNumber,
+          projectName: body.projectName,
+          projectDescription: body.projectDescription,
+          projectOpeningDate: body.projectOpeningDate,
+          categoryId: body.categoryId
+        });
         return res.status(201).json({
           status: true,
-          data: candidate.toJSON(),
+          data: newCandidate.toJSON()
         })
-      })
-      .catch((err) => {
+      } catch(err) {
         return res.status(500).json({
           status: false,
-          error: err,
+          error: err.message,
         })
-      })
+      }
   },
 
   updateCandidate: (req, res) => {
@@ -74,9 +80,9 @@ module.exports = {
       })
     }
 
-    Candidate.update({ id: candidateId }, payload)
+    candidate.update({ id: candidateId }, payload)
       .then(() => {
-        return Candidate.findCandidate({ id: candidateId });
+        return candidate.findCandidate({ id: candidateId });
       })
       .then((candidate) => {
         return res.status(200).json({
@@ -87,7 +93,7 @@ module.exports = {
       .catch((err) => {
         return res.status(500).json({
           status: false,
-          error: err,
+          error: err.message,
         })
       })
   },
@@ -97,7 +103,7 @@ module.exports = {
       params: { candidateId },
     } = req;
 
-    Candidate.destroy({ id: candidateId })
+    candidate.destroy({ id: candidateId })
       .then((numberOfEntriesDeleted) => {
         return res.status(200).json({
           status: true,
@@ -109,7 +115,7 @@ module.exports = {
       .catch((err) => {
         return res.status(500).json({
           status: false,
-          error: err,
+          error: err.message,
         })
       })
   },

@@ -6,19 +6,13 @@ const category = (sequelize, DataTypes) => {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     name: { type: DataTypes.STRING, allowNull: false, unique: true },
     description: { type: DataTypes.STRING, allowNull: true },
-    status: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true }
+    isActive: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true }
 
   }, {
     sequelize,
     modelName: 'category',
     tableName: 'categories'
   });
-
-  Category.associate = (models) => {
-    Category.hasMany(models.Candidate, {
-      foreignKey: 'category_id'
-    })
-  }
 
   return Category;
 };

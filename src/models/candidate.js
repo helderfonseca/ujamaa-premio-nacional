@@ -1,3 +1,4 @@
+const category = require('./category');
 
 const candidate = (sequelize, DataTypes) => {
 
@@ -10,19 +11,13 @@ const candidate = (sequelize, DataTypes) => {
     projectName: { type: DataTypes.STRING, allowNull: false, unique: true, field: 'project_name' },
     projectDescription: { type: DataTypes.TEXT, allowNull: false, field: 'project_description' },
     projectOpeningDate: { type: DataTypes.DATE, allowNull: false, field: 'project_opening_date' },
-    status: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true }
+    isActive: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },
 
   }, {
     sequelize,
     modelName: 'candidate',
     tableName: 'candidates'
   });
-
-  Candidate.associate = (models) => {
-    Candidate.belongsTo(models.Category, {
-      foreignKey: 'category_id'
-    })
-  }
 
   return Candidate;
 };
