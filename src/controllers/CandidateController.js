@@ -1,4 +1,4 @@
-const { candidate, category } = require('../models');
+const { candidate, category, candidate } = require('../models');
 
 module.exports = {
   getAllCandidates: async (req, res) => {
@@ -40,7 +40,7 @@ module.exports = {
   createCandidate: async (req, res) => {
     const { body } = req;
 
-      console.log(req.body);
+      //console.log(req.body);
       try {
         const newCandidate = await candidate.create({ 
           name: body.name,
@@ -63,26 +63,56 @@ module.exports = {
       }
   },
 
-  updateCandidate: (req, res) => {
+  updateCandidate: async (req, res) => {
     const {
-      params: { candidateId },
-      body: payload,
+      params: { id },
+      body: payload
     } = req;
 
-    //if the payload does not have any keys,
-    // Then we can return an error, as nothing can be update
-    if (!Object.keys(payload).length) {
+
+    if(!Object.keys(payload).length) {
       return res.status(400).json({
         status: false,
         error: {
-          message: "Body is empty, hence can not update the Candidate"
+          message: 'Body is empty, hence can not update Candidate'
         }
       })
     }
 
-    candidate.update({ id: candidateId }, payload)
+    try {
+      const updatedCandidate = await candidate.update({ where: { id: id } }, payload);
+      return res.status(200).json({
+        status: true,
+        data: updatedCandidate.toJSON()
+      })
+    } catch(err) {
+      return res.status(500).json({
+        status: false,
+        error: err.message
+      })
+    }
+  },
+
+  /*updateCandidate: (req, res) => {
+    const {
+      params: { id },
+      body: payload,
+    } = req;
+
+    if the payload does not have any keys,
+    Then we can return an error, as nothing can be update
+    if (!Object.keys(payload).length) {
+      return res.status(400).json({
+        status: false,
+        error: {
+          message: "Body is empty, hence can not update Candidate"
+        }
+      })
+    }
+
+    candidate.update({ id: id }, payload)
       .then(() => {
-        return candidate.findCandidate({ id: candidateId });
+        return candidate.findCandidate({ id: id });
       })
       .then((candidate) => {
         return res.status(200).json({
@@ -96,9 +126,30 @@ module.exports = {
           error: err.message,
         })
       })
-  },
+  },*/
 
-  deleteCandidate: (req, res) => {
+  deleteCandidate: async (req, res) => {
+    const {
+      params: { candidateId },
+    } = req;
+
+    try {
+      const candidate = await candidate.destroy({ id: candidateId });
+      return res.status(200).json({
+        status: true,
+        data: {
+          candidateDeleted: candidate
+        }
+      })
+    }catch(err) {
+      return res.status(500).json({
+        status: false,
+        data: err.message
+      })
+    }
+  }
+
+  /*deleteCandidate: (req, res) => {
     const {
       params: { candidateId },
     } = req;
@@ -118,5 +169,5 @@ module.exports = {
           error: err.message,
         })
       })
-  },
+  },*/
 }
