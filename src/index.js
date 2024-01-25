@@ -1,14 +1,21 @@
 const express = require('express');
+const cors = require("cors");
+const morgan = require("morgan");
+const bodyParser = require("body-parser");
+
 const CandidateRoutes = require('./routes/CandidateRoutes');
 const CategoryRoutes = require('./routes/CategoryRoutes');
 const AuthRoutes = require('./routes/AuthRoutes');
-const cors = require("cors");
-const morgan = require("morgan");
-const app = express();
+
 const { sequelize } = require('./models');
+
+const app = express();
 
 app.use(morgan("tiny"));
 app.use(cors());
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 const PORT = process.env.PORT || 3000;
 

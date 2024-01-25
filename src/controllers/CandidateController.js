@@ -1,4 +1,4 @@
-const { candidate, category, candidate } = require('../models');
+const { candidate, category } = require('../models');
 
 module.exports = {
   getAllCandidates: async (req, res) => {
@@ -40,7 +40,7 @@ module.exports = {
   createCandidate: async (req, res) => {
     const { body } = req;
 
-      //console.log(req.body);
+      console.log(req.body);
       try {
         const newCandidate = await candidate.create({ 
           name: body.name,

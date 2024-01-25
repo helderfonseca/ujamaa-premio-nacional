@@ -1,4 +1,5 @@
-const candidate = (sequelize, DataTypes) => {
+const bcrypt = require('bcrypt');
+const user = (sequelize, DataTypes) => {
 
   const User = sequelize.define('User', {
 
@@ -12,6 +13,15 @@ const candidate = (sequelize, DataTypes) => {
     modelName: 'user',
     tableName: 'users'
   });
+
+  User.beforeCreate(async (user, options) => {
+    try {
+      const hash = await bcrypt.hash(user.password, 10);
+      user.password = hash;
+    } catch (err) {
+      throw new Error(err);
+    }
+  })
 
   return User;
 };

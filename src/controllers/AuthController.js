@@ -1,13 +1,15 @@
 const { user } = require('../models');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 
-const registerUser = async(req, res) => {
-  try {
-    const { fullName, username, password } = req.body;
+module.exports = {
+  registerUser: async (req, res) => {
 
-    const userExists = await user.findOne({ where: { username }});
+  const { fullName, username, password } = req.body;
+
+  try {
+    /*const userExists = await user.findOne({ where: { username: username }});
 
     if (userExists){
       return res.status(500).json({
@@ -16,73 +18,78 @@ const registerUser = async(req, res) => {
           message: 'User\'s already exist'
         }
       })
-    }
-
-    const newUser = await user.create({ fullName, username, password: await bcrypt.hash(password, 15) });
+    }*/
+    const newUser = await user.create({ fullName, username, password });
 
     return res.status(200).json({
       status: true,
-      data: newUser
+      data: newUser.toJSON()
     })
 
-  } catch(err) {
+  } catch (err) {
 
     return res.status(500).json({
       status: false,
       error: err.message
     })
   }
-}
+},
 
-const signInUser = async(req, res) => {
-  try {
+  signInUser: async(req, res) => {
+
     const { username, password } = req.body;
-    const user = await user.findOne({ where: { username }});
 
-    if (!user) {
-      return res.status(400).json({
-        status: false,
-        error: {
-          message: 'User not found!'
-        }
-      })
-    }
+    console.log(req.body)
 
-    const passwordValid = await bcrypt.compare(password, user.password);
-    if (!passwordValid) {
-      return res.status(404).json({
-        status: false,
-        error: {
-          message: 'Incorrect email and password!'
-        } 
-      })
-    }
+    try {
+      const oneUer = await user.findOne({ where: { username }});
 
-    // Authenticate user with jwt
-    const token = jwt.sign({
-      id: user.id
-    }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_REFRESH_EXPIRATION
-    })
-
-    return res.status(200).json({
-      status: true,
-      data: {
-        id: user.id,
-        fullName: user.fullName,
-        username: user.username,
-        accessToken: token
+      if (!oneUer) {
+        return res.status(400).json({
+          status: false,
+          error: {
+            message: 'User not found!'
+          }
+        })
       }
-    })
-  } catch(err) {
-    return res.status(500).json({
-      status: false,
-      error: err.message
-    })
-  }
-}
 
-module.exports = {
-  registerUser,
-  signInUser
+      const passwordValid = await bcrypt.compare(password, oneUer.password);
+      if (!passwordValid) {
+        return res.status(404).json({
+          status: false,
+          error: {
+            message: 'Incorrect email and password!'
+          } 
+        })
+      }
+
+      // Generate JWT Secret Code
+      //node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+      
+      // Authenticate user with jwt
+      const token = jwt.sign({
+          id: oneUer.id
+        }, "sH4QhOengrrqCktZPRo99ROhmMupKwZ", {
+          expiresIn: 60 * 60 * 24 * 30 * 1000
+      })
+
+      //console.log(token)
+
+        return res.status(200).json({
+          status: true,
+          data: {
+            id: oneUer.id,
+            fullName: oneUer.fullName,
+            username: oneUer.username,
+            accessToken: token
+          }
+        })
+
+      } catch(err) {
+          return res.status(500).json({
+            status: false,
+            error: err.message
+          })
+      }
+    }
 }
