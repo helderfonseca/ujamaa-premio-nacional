@@ -9,7 +9,7 @@ module.exports = {
   const { fullName, username, password } = req.body;
 
   try {
-    const userExists = await user.findOne({ where: { username: username }});
+    const userExists = await user.findOne({ where: { username }});
 
     if (userExists){
       return res.status(500).json({
