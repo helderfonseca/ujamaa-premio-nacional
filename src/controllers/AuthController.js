@@ -9,7 +9,7 @@ module.exports = {
   const { fullName, username, password } = req.body;
 
   try {
-    /*const userExists = await user.findOne({ where: { username: username }});
+    const userExists = await user.findOne({ where: { username: username }});
 
     if (userExists){
       return res.status(500).json({
@@ -18,8 +18,11 @@ module.exports = {
           message: 'User\'s already exist'
         }
       })
-    }*/
+    }
+
     const newUser = await user.create({ fullName, username, password });
+
+    //console.log(newUser.password);
 
     return res.status(200).json({
       status: true,
@@ -38,8 +41,7 @@ module.exports = {
   signInUser: async(req, res) => {
 
     const { username, password } = req.body;
-
-    console.log(req.body)
+    //console.log(req.body)
 
     try {
       const oneUer = await user.findOne({ where: { username }});
@@ -70,7 +72,7 @@ module.exports = {
       const token = jwt.sign({
           id: oneUer.id
         }, "sH4QhOengrrqCktZPRo99ROhmMupKwZ", {
-          expiresIn: 60 * 60 * 24 * 30 * 1000
+          expiresIn: '2h'
       })
 
       //console.log(token)
