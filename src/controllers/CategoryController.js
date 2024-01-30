@@ -36,10 +36,10 @@ module.exports = {
   },
 
   createCategory: async (req, res) => {
-    const { body } = req;
+    //const { body } = req;
 
     try {
-      const newCategory = await category.create(body);
+      const newCategory = await category.create(req.body);
       return res.status(201).json({
         status: true,
         data: newCategory.toJSON()

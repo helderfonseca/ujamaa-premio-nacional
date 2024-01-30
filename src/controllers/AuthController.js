@@ -2,16 +2,24 @@ const { user } = require('../models');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const { roles, jwtSecret, jwtExpirationInSeconds } = require('../config/config');
+
 
 module.exports = {
   registerUser: async (req, res) => {
 
-  const { fullName, username, password } = req.body;
+  const { fullName, email, password } = req.body;
+
+  let role = req.body.role;
+  
+  if (!role) {
+    role = roles.USER;
+  }
 
   try {
-    const userExists = await user.findOne({ where: { username }});
+    const userExists = await user.findOne({ where: { email }});
 
-    if (userExists){
+    if (userExists) {
       return res.status(500).json({
         status: false,
         error: {
@@ -20,7 +28,7 @@ module.exports = {
       })
     }
 
-    const newUser = await user.create({ fullName, username, password });
+    const newUser = await user.create({ fullName, email, password, role });
 
     //console.log(newUser.password);
 
@@ -40,11 +48,11 @@ module.exports = {
 
   signInUser: async(req, res) => {
 
-    const { username, password } = req.body;
+    const { email, password } = req.body;
     //console.log(req.body)
 
     try {
-      const oneUer = await user.findOne({ where: { username }});
+      const oneUer = await user.findOne({ where: { email }});
 
       if (!oneUer) {
         return res.status(400).json({
@@ -71,8 +79,8 @@ module.exports = {
       // Authenticate user with jwt
       const token = jwt.sign({
           id: oneUer.id
-        }, "sH4QhOengrrqCktZPRo99ROhmMupKwZ", {
-          expiresIn: '2h'
+        }, jwtSecret, {
+          expiresIn: jwtExpirationInSeconds
       })
 
       //console.log(token)
@@ -82,7 +90,8 @@ module.exports = {
           data: {
             id: oneUer.id,
             fullName: oneUer.fullName,
-            username: oneUer.username,
+            email: oneUer.email,
+            role: oneUer.role,
             accessToken: token
           }
         })

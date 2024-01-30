@@ -17,24 +17,26 @@ module.exports = {
     }
   },
 
-  getCandidateById: (req, res) => {
+  getCandidateById: async (req, res) => {
     const {
       params: { id },
     } = req;
+    
+    const oneCandidate = candidate.findOne({ id });
+    try {
+      
+      return res.status(200).json({
+        status: true, 
+        data: oneCandidate.toJSON(),
+      })
 
-    candidate.findOne({ id: id })
-      .then((candidate) => {
-        return res.status(200).json({
-          status: true,
-          data: candidate.toJSON(),
-        })
+    } catch(err) {
+      
+      return res.status(500).json({
+        status: false,
+        error: err.message,
       })
-      .catch((err) => {
-        return res.status(500).json({
-          status: false,
-          error: err.message,
-        })
-      })
+    }
   },
 
   createCandidate: async (req, res) => {
