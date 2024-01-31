@@ -7,6 +7,7 @@ const CandidateRoutes = require('./routes/CandidateRoutes');
 const CategoryRoutes = require('./routes/CategoryRoutes');
 const AuthRoutes = require('./routes/AuthRoutes');
 const UserRoutes = require('./routes/UserRoutes');
+const VoteRoutes = require('./routes/VoteRoutes');
 
 const { sequelize } = require('./models');
 
@@ -27,14 +28,11 @@ sequelize
   .then(() => {
     console.log('Sequelize initialized!!');
 
+    app.use('/api/v1', AuthRoutes);
+    app.use('/api/v1/vote', VoteRoutes);
+    app.use('/api/v1/user', UserRoutes);
     app.use('/api/v1/candidate', CandidateRoutes);
     app.use('/api/v1/category', CategoryRoutes);
-    app.use('/api/v1', AuthRoutes);
-    app.use('/api/v1/user', UserRoutes);
-
-    /*app.get('*', (req, res) => {
-      res.status(404).send('404 Page Not Found');
-    });*/
 
     app.listen(PORT, () => {
       console.log('Server Listening on PORT:', PORT);
